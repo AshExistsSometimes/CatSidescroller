@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe2a08877b2520f4aa001de40da0b7a6, type: 3}
+  m_Name: Levels_1.1
+  m_EditorClassIdentifier: 
+  levelID: Training Ground
+  sceneName: 
+  zoneName: Katze Forest
+  baseRewardMoney: 10
+  minChestMoney: 5
+  maxChestMoney: 20
+  enemySpawnList:
+  - {fileID: 11400000, guid: eae2a5a34214b4e4c9412ef4f7bf206c, type: 2}
+  - {fileID: 11400000, guid: c85a7f6c22ce0734aa0ec43ee1bba346, type: 2}
+  hasBoss: 0
+  bossEnemyData: {fileID: 0}
+  startPoint: {fileID: 0}
+  endPoint: {fileID: 0}
