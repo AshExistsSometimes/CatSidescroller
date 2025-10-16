@@ -10,9 +10,9 @@ public class LevelManager : MonoBehaviour
     public LevelData currentLevelData;
 
     [Header("Spawn Settings")]
-    public Transform enemySpawnPoint;  // Typically offscreen right
-    public Transform groundReference;  // Used to define Y=0 position for grounded enemies
-    public float topOfScreenY = 5f;    // Defines Y=1 equivalent for aerial enemies
+    public Transform enemySpawnPoint;  // spawn X position (off-screen right)
+    public Transform groundReference;  // Y position considered ground (Y = 0)
+    public float topOfScreenY = 5f;    // world Y for enemyHeight == 1
 
     [Header("Spawned Enemies (Debug)")]
     public List<GameObject> activeEnemies = new List<GameObject>();
@@ -31,114 +31,139 @@ public class LevelManager : MonoBehaviour
         Instance = this;
     }
 
-    /// <summary>
-    /// Starts the level with the specified LevelData.
-    /// </summary>
+    // Begins the level with the provided LevelData.
     public void BeginLevel(LevelData levelData)
     {
+        if (levelData == null)
+        {
+            Debug.LogError("LevelManager.BeginLevel called with null LevelData.");
+            return;
+        }
+
         currentLevelData = levelData;
         StartCoroutine(LevelRoutine());
     }
 
-    /// <summary>
-    /// Core coroutine that handles sequential enemy spawns and boss logic.
-    /// </summary>
     private IEnumerator LevelRoutine()
     {
         levelRunning = true;
         levelComplete = false;
         bossActive = false;
 
-        // Begin background scroll
-        ScrollManager.Instance.ResumeScrolling();
+        // Ensure scrolling is active at start
+        if (ScrollManager.Instance != null)
+            ScrollManager.Instance.ResumeScrolling();
 
-        // Iterate through the enemy spawn list
-        foreach (EnemySpawnInfo spawnInfo in currentLevelData.enemySpawnList)
+        // Use the enemy sequence defined in LevelData
+        foreach (EnemySpawnInfo spawnInfo in currentLevelData.enemySequence)
         {
+            // Delay before spawning this entry
             yield return new WaitForSeconds(spawnInfo.delayBeforeSpawn);
 
             SpawnEnemy(spawnInfo);
 
-            // If this enemy is a boss, stop scrolling
-            if (spawnInfo.enemyData.type == EnemyType.Boss)
+            // If this spawn is a boss, stop scrolling immediately
+            if (spawnInfo.enemyData != null && spawnInfo.enemyData.type == EnemyType.Boss)
             {
-                ScrollManager.Instance.StopScrolling();
+                if (ScrollManager.Instance != null)
+                    ScrollManager.Instance.StopScrolling();
                 bossActive = true;
             }
         }
 
-        // Wait until all enemies are cleared
+        // Wait until all active enemies have been removed
         yield return new WaitUntil(() => activeEnemies.Count == 0);
 
-        // Resume scroll if boss was active (visual transition)
-        if (bossActive)
+        // Resume scrolling if boss was active (visual transition)
+        if (bossActive && ScrollManager.Instance != null)
             ScrollManager.Instance.ResumeScrolling();
 
         levelRunning = false;
         levelComplete = true;
 
-        // Notify GameManager
-        GameManager.Instance.OnLevelCompleted();
+        // Notify GameManager that the level completed
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnLevelCompleted();
     }
 
-    /// Spawns a single enemy from ObjectPool or via Instantiate if not pooled.
+
+    // Spawns a single enemy based on spawn info. Uses pooling if available.
     private void SpawnEnemy(EnemySpawnInfo spawnInfo)
     {
-        if (spawnInfo.enemyData == null)
+        if (spawnInfo == null || spawnInfo.enemyData == null)
         {
-            Debug.LogWarning("LevelManager: Missing EnemyData in spawn info.");
+            Debug.LogWarning("LevelManager.SpawnEnemy: spawnInfo or enemyData null.");
             return;
         }
 
-        Vector3 spawnPos = enemySpawnPoint.position;
+        Vector3 spawnPos = enemySpawnPoint != null ? enemySpawnPoint.position : Vector3.zero;
 
-        // Handle flying enemy height
+        // Determine Y position based on enemy type and normalized enemyHeight
         if (spawnInfo.enemyData.type == EnemyType.Aerial)
         {
-            float heightY = Mathf.Lerp(groundReference.position.y, topOfScreenY, spawnInfo.enemyHeight);
+            float groundY = (groundReference != null) ? groundReference.position.y : 0f;
+            float heightY = Mathf.Lerp(groundY, topOfScreenY, Mathf.Clamp01(spawnInfo.enemyHeight));
             spawnPos.y = heightY;
         }
         else
         {
-            spawnPos.y = groundReference.position.y;
+            spawnPos.y = (groundReference != null) ? groundReference.position.y : 0f;
         }
 
-        GameObject enemyObj = ObjectPoolManager.Instance != null
-            ? ObjectPoolManager.Instance.SpawnFromPool(spawnInfo.enemyData.enemyID, spawnPos, Quaternion.identity)
-            : Instantiate(spawnInfo.enemyData.prefabRef, spawnPos, Quaternion.identity);
+        // Prefer pooling if available. Pools should be keyed by enemyID.
+        GameObject enemyObj = null;
+        if (ObjectPoolManager.Instance != null && !string.IsNullOrEmpty(spawnInfo.enemyData.enemyID))
+        {
+            enemyObj = ObjectPoolManager.Instance.SpawnFromPool(spawnInfo.enemyData.enemyID, spawnPos, Quaternion.identity);
+        }
+        else
+        {
+            // Use the prefab reference from EnemyData
+            enemyObj = Instantiate(spawnInfo.enemyData.prefab, spawnPos, Quaternion.identity);
+        }
 
         if (enemyObj != null)
         {
             activeEnemies.Add(enemyObj);
 
+            // Attach and initialize EnemyBase if present
             EnemyBase enemyBase = enemyObj.GetComponent<EnemyBase>();
             if (enemyBase != null)
             {
                 enemyBase.OnEnemyDeath += HandleEnemyDeath;
                 enemyBase.Initialize(spawnInfo.enemyData);
             }
+            else
+            {
+                Debug.LogWarning("Spawned enemy prefab does not have an EnemyBase component.");
+            }
         }
     }
 
-    // Handles cleanup when an enemy is defeated.
+    // Called when an enemy dies
     private void HandleEnemyDeath(GameObject enemyObj)
     {
+        if (enemyObj == null) return;
+
         if (activeEnemies.Contains(enemyObj))
             activeEnemies.Remove(enemyObj);
+
+        // Optionally ensure the object is deactivated/repooled here (EnemyBase.Die handles that).
     }
 
-    // Forces all active enemies to despawn (used on player death or reset).
+    // Force-clear active enemies (used on level reset/player death).
     public void ClearActiveEnemies()
     {
-        foreach (GameObject e in activeEnemies)
+        for (int i = activeEnemies.Count - 1; i >= 0; i--)
         {
+            GameObject e = activeEnemies[i];
             if (e != null)
                 e.SetActive(false);
         }
+
         activeEnemies.Clear();
     }
 
-    // Returns true if all enemies have been spawned and defeated.
     public bool IsLevelComplete()
     {
         return levelComplete;

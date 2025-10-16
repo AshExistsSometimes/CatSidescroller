@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        // Enforce Singleton Pattern
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -26,10 +25,8 @@ public class GameManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // Initialize Core Managers
         InitializeManagers();
     }
-
 
     // Initializes core subsystems required across all scenes.
     private void InitializeManagers()
@@ -53,6 +50,22 @@ public class GameManager : MonoBehaviour
     {
         currentLevel = levelData;
         SceneManager.LoadScene(levelData.sceneName);
+    }
+
+    // Called by LevelManager when a level completes (all enemies defeated).
+    // For now: save progress and return to Hub. Expand this to award XP/money UI as needed.
+    public void OnLevelCompleted()
+    {
+        Debug.Log("GameManager: Level completed.");
+
+        // TODO: compute XP/money awards here (hook into XPManager / EconomyManager later).
+
+        // Save progress
+        if (saveLoadManager != null && playerProgress != null)
+            saveLoadManager.SaveProgress(playerProgress);
+
+        // Return to hub (or show results UI)
+        LoadScene("Hub");
     }
 
     // Returns to the main hub scene.

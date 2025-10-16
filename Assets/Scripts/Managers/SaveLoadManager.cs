@@ -4,15 +4,31 @@ using System.IO;
 public class SaveLoadManager : MonoBehaviour
 {
     private string saveFilePath;
+    public static SaveLoadManager Instance;
+
+    [HideInInspector] public PlayerProgress progress; // Current loaded progress instance
 
     private void Awake()
     {
+
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+
         saveFilePath = Path.Combine(Application.persistentDataPath, "SaveData.Sav");
     }
 
     // Saves the given PlayerProgress ScriptableObject as a JSON.
     public void SaveProgress(PlayerProgress progress)
     {
+        this.progress = progress;
+
         if (progress == null)
         {
             Debug.LogWarning("SaveLoadManager.SaveProgress: progress is null, aborting save.");
@@ -41,10 +57,11 @@ public class SaveLoadManager : MonoBehaviour
             try
             {
                 string json = File.ReadAllText(saveFilePath);
-                PlayerProgress progress = ScriptableObject.CreateInstance<PlayerProgress>();
-                JsonUtility.FromJsonOverwrite(json, progress);
+                PlayerProgress loadedProgress = ScriptableObject.CreateInstance<PlayerProgress>();
+                JsonUtility.FromJsonOverwrite(json, loadedProgress);
                 Debug.Log("SaveLoadManager: Progress loaded successfully.");
-                return progress;
+                progress = loadedProgress;
+                return loadedProgress;
             }
             catch (System.Exception ex)
             {
@@ -56,6 +73,7 @@ public class SaveLoadManager : MonoBehaviour
         Debug.Log("SaveLoadManager: No valid save found. Creating default PlayerProgress.");
         PlayerProgress newProgress = ScriptableObject.CreateInstance<PlayerProgress>();
         InitializeDefaultProgress(newProgress);
+        progress = newProgress;
         return newProgress;
     }
 

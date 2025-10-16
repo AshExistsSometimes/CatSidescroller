@@ -1,10 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Holds player progression data; can be stored as ScriptableObject (for debugging)
-/// or serialized to JSON at runtime for persistent saving.
-/// </summary>
 [CreateAssetMenu(fileName = "NewPlayerProgress", menuName = "Data/Player Progress")]
 public class PlayerProgress : ScriptableObject
 {
