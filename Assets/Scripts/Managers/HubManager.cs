@@ -54,9 +54,7 @@ public class HubManager : MonoBehaviour
         ShowMainMenu();
     }
 
-    /// <summary>
     /// Updates player stat texts.
-    /// </summary>
     public void RefreshPlayerStats()
     {
         var p = SaveLoadManager.Instance.progress;
@@ -66,9 +64,7 @@ public class HubManager : MonoBehaviour
         playerMoneyText.text = $"Money: {p.money}";
     }
 
-    /// <summary>
     /// Updates item counts and greys out icons if none are owned.
-    /// </summary>
     public void RefreshItemDisplay()
     {
         var p = SaveLoadManager.Instance.progress;
@@ -110,17 +106,11 @@ public class HubManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Handles level button click.
-    /// </summary>
     private void OnLevelSelected(LevelData level)
     {
         StartCoroutine(LoadLevelScene(level));
     }
 
-    /// <summary>
-    /// Loads a level scene and passes data to GameManager.
-    /// </summary>
     private System.Collections.IEnumerator LoadLevelScene(LevelData level)
     {
         GameManager.Instance.StartLevel(level);

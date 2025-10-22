@@ -1,32 +1,42 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
-/// <summary>
-/// Minimal base class for enemies. Holds stats, provides Initialize and damage handling,
-/// and fires OnEnemyDeath when the enemy dies. Expand this for specific behaviours.
-/// </summary>
 [RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class EnemyBase : MonoBehaviour
 {
-    // Public event that notifies subscribers that this enemy has died.
-    // The GameObject parameter is the enemy instance (useful for pooling).
     public event Action<GameObject> OnEnemyDeath;
 
-    // Runtime stats populated from EnemyData
+    [Header("Stats")]
     public float maxHP = 1f;
     public float currentHP = 1f;
     public float damage = 1f;
     public float speed = 1f;
     public EnemyType enemyType;
 
-    // Reference to the EnemyData used to initialize this instance
-    private EnemyData sourceData;
+    protected EnemyData sourceData;
+
+    // Cached components
+    protected Rigidbody2D rb;
+    protected SpriteRenderer sr;
+
+    // Hit feedback
+    private Color originalColor;
+    private bool isKnockedBack = false;
+
+    protected virtual void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
+        originalColor = sr.color;
+    }
 
     /// <summary>
-    /// Initialize this enemy instance using data from EnemyData.
-    /// Should be called immediately after instantiation or pooling.
+    /// Initializes enemy stats from ScriptableObject data.
     /// </summary>
-    public void Initialize(EnemyData data)
+    public virtual void Initialize(EnemyData data)
     {
         if (data == null)
         {
@@ -41,53 +51,57 @@ public class EnemyBase : MonoBehaviour
         damage = data.damage;
         speed = data.speed;
 
-        // Optional: set name for debugging
         gameObject.name = $"Enemy_{data.enemyID}";
     }
 
-    /// <summary>
-    /// Apply damage to the enemy. When HP <= 0 this will trigger death logic.
-    /// </summary>
-    public void TakeDamage(float amount)
+    /// Called when the enemy takes damage. Triggers flash and death if HP <= 0.
+    public virtual void TakeDamage(float amount)
     {
+        Debug.Log("Enemy Damaged");
         if (amount <= 0f) return;
-
         currentHP -= amount;
+
+        StartCoroutine(FlashRed());
+
         if (currentHP <= 0f)
             Die();
-        else
-            OnHitFeedback();
     }
 
-    /// <summary>
-    /// Hook for hit feedback (particles, flash, sound). Keep minimal here.
-    /// </summary>
-    protected virtual void OnHitFeedback()
+    /// Coroutine that briefly flashes the sprite red to indicate damage.
+    protected IEnumerator FlashRed()
     {
-        // Placeholder: override in derived classes or add particle playback.
+        Debug.Log("Flashing Red");
+        sr.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        sr.color = originalColor;
     }
 
-    /// <summary>
-    /// Handles death: disable or return to pool and notify listeners.
-    /// </summary>
+    /// Applies knockback force, preventing movement temporarily.
+    public virtual void ApplyKnockback(Vector2 direction, float force, float duration = 0.3f)
+    {
+        if (isKnockedBack) return;
+        StartCoroutine(KnockbackRoutine(direction, force, duration));
+    }
+
+    private IEnumerator KnockbackRoutine(Vector2 direction, float force, float duration)
+    {
+        isKnockedBack = true;
+        rb.linearVelocity = Vector2.zero;
+        rb.AddForce(direction.normalized * force, ForceMode2D.Impulse);
+        yield return new WaitForSeconds(duration);
+        isKnockedBack = false;
+    }
+
     protected virtual void Die()
     {
-        // Notify listeners before deactivating
         OnEnemyDeath?.Invoke(gameObject);
-
-        // Broadcast global event (optional)
         EventBus.Publish(GameEvent.EnemyDefeated, sourceData);
 
-        // If pooling is used, deactivate; otherwise destroy.
         if (ObjectPoolManager.Instance != null && sourceData != null && !string.IsNullOrEmpty(sourceData.enemyID))
-        {
-            // Return to pool indirectly by disabling; pooled object should be recycled by pool rules.
             gameObject.SetActive(false);
-        }
         else
-        {
             Destroy(gameObject);
-        }
     }
 }
+
 

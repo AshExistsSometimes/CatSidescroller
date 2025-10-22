@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   layers:
-  - layerName: Forground
+  - layerName: Foreground
     scrollSpeed: 1.5
     layerDepth: 1
     panels: []

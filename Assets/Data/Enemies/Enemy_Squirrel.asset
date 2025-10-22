@@ -21,4 +21,4 @@ MonoBehaviour:
   deviationRate: 0
   rewardXP: 30
   rewardMoney: 30
-  prefab: {fileID: 0}
+  prefab: {fileID: 5988264650058724718, guid: 02b0cff846f693c45902ce1fc0a13355, type: 3}

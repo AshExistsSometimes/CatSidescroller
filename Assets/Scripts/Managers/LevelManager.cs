@@ -31,6 +31,24 @@ public class LevelManager : MonoBehaviour
         Instance = this;
     }
 
+    private IEnumerator Start()
+    {
+        // Wait one frame to ensure GameManager and other singletons are initialized
+        yield return null;
+
+        if (GameManager.Instance != null && GameManager.Instance.currentLevel != null)
+        {
+            Debug.Log($"LevelManager: Found LevelData from GameManager ({GameManager.Instance.currentLevel.levelID})");
+            BeginLevel(GameManager.Instance.currentLevel);
+        }
+        else
+        {
+            Debug.LogWarning("LevelManager: No LevelData found in GameManager. Using fallback LevelData if assigned manually.");
+            if (currentLevelData != null)
+                BeginLevel(currentLevelData);
+        }
+    }
+
     // Begins the level with the provided LevelData.
     public void BeginLevel(LevelData levelData)
     {
@@ -147,8 +165,6 @@ public class LevelManager : MonoBehaviour
 
         if (activeEnemies.Contains(enemyObj))
             activeEnemies.Remove(enemyObj);
-
-        // Optionally ensure the object is deactivated/repooled here (EnemyBase.Die handles that).
     }
 
     // Force-clear active enemies (used on level reset/player death).
