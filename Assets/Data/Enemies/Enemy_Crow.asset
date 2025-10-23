@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyID: Crow
   type: 1
-  maxHP: 1
+  maxHP: 20
   damage: 3
-  speed: 2
+  speed: 1
   movDeviation: 0
   deviationRate: 0
   rewardXP: 10

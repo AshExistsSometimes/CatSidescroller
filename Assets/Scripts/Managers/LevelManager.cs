@@ -21,6 +21,9 @@ public class LevelManager : MonoBehaviour
     private bool bossActive = false;
     private bool levelComplete = false;
 
+    [Header("UI")]
+    public GameObject ResultsScreen;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -40,6 +43,7 @@ public class LevelManager : MonoBehaviour
         {
             Debug.Log($"LevelManager: Found LevelData from GameManager ({GameManager.Instance.currentLevel.levelID})");
             BeginLevel(GameManager.Instance.currentLevel);
+            ResultsScreen.SetActive(false);
         }
         else
         {
@@ -61,7 +65,6 @@ public class LevelManager : MonoBehaviour
         currentLevelData = levelData;
         StartCoroutine(LevelRoutine());
     }
-
     private IEnumerator LevelRoutine()
     {
         levelRunning = true;
@@ -99,9 +102,16 @@ public class LevelManager : MonoBehaviour
         levelRunning = false;
         levelComplete = true;
 
+        ResultsScreen.SetActive(true);
+
         // Notify GameManager that the level completed
         if (GameManager.Instance != null)
             GameManager.Instance.OnLevelCompleted();
+    }
+
+    public void GoToHub()
+    {
+        GameManager.Instance.ReturnToHub();
     }
 
 

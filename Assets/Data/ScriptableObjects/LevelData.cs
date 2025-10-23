@@ -24,7 +24,7 @@ public class LevelData : ScriptableObject
     public string levelID;
 
     [Tooltip("Name of the Unity scene this level belongs to (usually shared for all levels).")]
-    public string sceneName;
+    public string sceneName = "LevelScene";
 
     [Tooltip("Zone definition for visual and environmental data.")]
     public ZoneData zoneData;

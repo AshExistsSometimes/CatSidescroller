@@ -24,7 +24,6 @@ public class EnemyBase : MonoBehaviour
 
     // Hit feedback
     private Color originalColor;
-    private bool isKnockedBack = false;
 
     protected virtual void Awake()
     {
@@ -57,7 +56,6 @@ public class EnemyBase : MonoBehaviour
     /// Called when the enemy takes damage. Triggers flash and death if HP <= 0.
     public virtual void TakeDamage(float amount)
     {
-        Debug.Log("Enemy Damaged");
         if (amount <= 0f) return;
         currentHP -= amount;
 
@@ -70,28 +68,10 @@ public class EnemyBase : MonoBehaviour
     /// Coroutine that briefly flashes the sprite red to indicate damage.
     protected IEnumerator FlashRed()
     {
-        Debug.Log("Flashing Red");
         sr.color = Color.red;
         yield return new WaitForSeconds(0.1f);
         sr.color = originalColor;
     }
-
-    /// Applies knockback force, preventing movement temporarily.
-    public virtual void ApplyKnockback(Vector2 direction, float force, float duration = 0.3f)
-    {
-        if (isKnockedBack) return;
-        StartCoroutine(KnockbackRoutine(direction, force, duration));
-    }
-
-    private IEnumerator KnockbackRoutine(Vector2 direction, float force, float duration)
-    {
-        isKnockedBack = true;
-        rb.linearVelocity = Vector2.zero;
-        rb.AddForce(direction.normalized * force, ForceMode2D.Impulse);
-        yield return new WaitForSeconds(duration);
-        isKnockedBack = false;
-    }
-
     protected virtual void Die()
     {
         OnEnemyDeath?.Invoke(gameObject);

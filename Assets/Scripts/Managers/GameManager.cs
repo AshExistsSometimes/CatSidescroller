@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     public SaveLoadManager saveLoadManager;
     public ObjectPoolManager objectPoolManager;
 
+    
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -63,9 +65,6 @@ public class GameManager : MonoBehaviour
         // Save progress
         if (saveLoadManager != null && playerProgress != null)
             saveLoadManager.SaveProgress(playerProgress);
-
-        // Return to hub (or show results UI)
-        LoadScene("Hub");
     }
 
     // Returns to the main hub scene.

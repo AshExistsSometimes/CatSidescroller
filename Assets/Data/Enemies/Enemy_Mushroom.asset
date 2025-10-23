@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyID: Mushroom
   type: 0
-  maxHP: 2
+  maxHP: 30
   damage: 1
-  speed: 1
+  speed: 0.5
   movDeviation: 0
   deviationRate: 0
   rewardXP: 5

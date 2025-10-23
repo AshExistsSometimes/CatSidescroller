@@ -16,7 +16,7 @@ MonoBehaviour:
   type: 1
   maxHP: 3
   damage: 2
-  speed: 3
+  speed: 0.2
   movDeviation: 90
   deviationRate: 0.5
   rewardXP: 15
