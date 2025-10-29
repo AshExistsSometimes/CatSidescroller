@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour
     {
         currentLevel = levelData;
         SceneManager.LoadScene(levelData.sceneName);
+        ScrollManager.Instance.AlignAllLayersAtStart();
     }
 
     // Called by LevelManager when a level completes (all enemies defeated).

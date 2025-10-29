@@ -11,8 +11,8 @@ public class PlayerProgress : ScriptableObject
     public int skillPoints = 0;
 
     [Header("Stats")]
-    public float currentHP = 100f;
-    public float maxHP = 100f;
+    public float currentHP = 20f;
+    public float maxHP = 20f;
     public float baseDamage = 10f;
 
     [Header("Economy")]

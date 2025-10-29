@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyID: Snail
   type: 0
-  maxHP: 150
-  damage: 2
-  speed: 0.1
+  maxHP: 170
+  damage: 20
+  speed: 0.4
   movDeviation: 0
   deviationRate: 0
   rewardXP: 5

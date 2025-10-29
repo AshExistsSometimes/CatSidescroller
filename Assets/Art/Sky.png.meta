@@ -1,16 +1,10 @@
 fileFormatVersion: 2
-guid: 7bc5fe8d77712d746843fea21751ba54
+guid: d993469a9bb20814b9f8b54cbac939a4
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -433117355922861904
-    second: Fairy Temp_0
-  - first:
-      213: 2083135059517640397
-    second: Fairy Temp_1
-  - first:
-      213: -6294554475099460278
-    second: Fairy Temp_2
+      213: -6224885648455465140
+    second: Sky 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -102,87 +96,17 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Fairy Temp_0
+      name: Sky 1_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 37
-        width: 323
-        height: 271
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0b0592e3f024df9f0800000000000000
-      internalID: -433117355922861904
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Fairy Temp_1
-      rect:
-        serializedVersion: 2
-        x: 99
-        y: 11
-        width: 34
-        height: 33
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: dce06b9bc48c8ec10800000000000000
-      internalID: 2083135059517640397
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Fairy Temp_2
-      rect:
-        serializedVersion: 2
-        x: 121
         y: 0
-        width: 15
-        height: 14
+        width: 700
+        height: 1200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -191,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a4de95c0e0045a8a0800000000000000
-      internalID: -6294554475099460278
+      spriteID: c47826ccb73cc99a0800000000000000
+      internalID: -6224885648455465140
       vertices: []
       indices: 
       edges: []
@@ -211,9 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Fairy Temp_0: -433117355922861904
-      Fairy Temp_1: 2083135059517640397
-      Fairy Temp_2: -6294554475099460278
+      Sky 1_0: -6224885648455465140
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

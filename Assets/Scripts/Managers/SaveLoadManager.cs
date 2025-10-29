@@ -22,6 +22,8 @@ public class SaveLoadManager : MonoBehaviour
 
 
         saveFilePath = Path.Combine(Application.persistentDataPath, "SaveData.Sav");
+
+        Debug.Log(saveFilePath);
     }
 
     // Saves the given PlayerProgress ScriptableObject as a JSON.

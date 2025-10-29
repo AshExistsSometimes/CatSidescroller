@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04db6d13433142b45a166b2f16ed6c94, type: 3}
-  m_Name: PlayerData
+  m_Name: PlayerProgress
   m_EditorClassIdentifier: 
   playerLevel: 1
   playerExp: 0
   nextLevelExp: 100
   skillPoints: 0
-  currentHP: 100
-  maxHP: 100
-  baseDamage: 1
-  money: 0
-  teaCount: 0
-  milkCount: 0
-  elixirCount: 0
+  currentHP: 20
+  maxHP: 20
+  baseDamage: 5
+  money: 100
+  teaCount: 5
+  milkCount: 5
+  elixirCount: 5
   cosmeticsOwned: []

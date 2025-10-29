@@ -49,11 +49,4 @@ public class LevelData : ScriptableObject
 
     [Tooltip("Reference to the boss enemy data for this level (if hasBoss is true).")]
     public EnemyData bossEnemyData;
-
-    [Header("Environment Overrides (Optional)")]
-    [Tooltip("Additional layers added on top of the zone visuals.")]
-    public List<LayerData> additionalLayers = new List<LayerData>();
-
-    [Tooltip("Layers that replace zone visuals of the same type.")]
-    public List<LayerData> overrideLayers = new List<LayerData>();
 }

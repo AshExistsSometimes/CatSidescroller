@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d97cdd9b2e10fc34087e205798058a67
+guid: 09be0de19c2c6404cb7857f76c327851
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4870791650557003773
-    second: TEMPCAT_0
+      213: 5019257228493227419
+    second: FairyEnemy_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: TEMPCAT_0
+      name: FairyEnemy_0
       rect:
         serializedVersion: 2
-        x: 83
+        x: 12
         y: 14
-        width: 194
-        height: 305
+        width: 230
+        height: 236
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: df7836a1337889340800000000000000
-      internalID: 4870791650557003773
+      spriteID: b9586ac2bdbf7a540800000000000000
+      internalID: 5019257228493227419
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      TEMPCAT_0: 4870791650557003773
+      FairyEnemy_0: 5019257228493227419
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

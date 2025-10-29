@@ -1,10 +1,19 @@
 fileFormatVersion: 2
-guid: 8287c9bb119a8c243bf33829f256d82b
+guid: a7c212da62e81424bad82cd20805de71
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5904728347973103701
-    second: Temp Crow_0
+      213: -8609472732670130380
+    second: Hitmarker_0
+  - first:
+      213: -3484515005065470352
+    second: Hitmarker_1
+  - first:
+      213: -2667216972445768141
+    second: Hitmarker_2
+  - first:
+      213: -9045133971883688021
+    second: Hitmarker_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,43 +105,17 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Temp Crow_0
+      name: Hitmarker_0
       rect:
         serializedVersion: 2
-        x: 5
-        y: 71
-        width: 337
-        height: 262
+        x: 16
+        y: 153
+        width: 78
+        height: 85
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +124,74 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 550bd1cd52fc1f150800000000000000
-      internalID: 5904728347973103701
+      spriteID: 43709c12a22058880800000000000000
+      internalID: -8609472732670130380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hitmarker_1
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 166
+        width: 77
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07edd8c801484afc0800000000000000
+      internalID: -3484515005065470352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hitmarker_2
+      rect:
+        serializedVersion: 2
+        x: 182
+        y: 128
+        width: 73
+        height: 82
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3362a7a8b442cfad0800000000000000
+      internalID: -2667216972445768141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hitmarker_3
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 16
+        width: 203
+        height: 136
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: baffd04639a397280800000000000000
+      internalID: -9045133971883688021
       vertices: []
       indices: 
       edges: []
@@ -161,7 +210,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Temp Crow_0: 5904728347973103701
+      Hitmarker_0: -8609472732670130380
+      Hitmarker_1: -3484515005065470352
+      Hitmarker_2: -2667216972445768141
+      Hitmarker_3: -9045133971883688021
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

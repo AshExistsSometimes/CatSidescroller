@@ -8,9 +8,18 @@ public class PlayerAttackInput : MonoBehaviour
     public GameObject swipeTrailPrefab;
     public float swipeTrailLifetime = 0.3f;
 
+    [Header("Tap Settings")]
+    public GameObject tapHitmarkerPrefab;
+    public float tapHitmarkerLifetime = 0.2f;
+    public float swipeThreshold = 0.3f; // distance threshold to classify swipe vs tap
+
     private Vector2 swipeStart;
     private bool isSwiping = false;
     private GameObject currentTrail;
+
+    public float spawnInterval = 0.001f;
+    private float timeSinceLastSpawn = 0f;
+    private Vector2 lastSpawnPos;
 
     private void Update()
     {
@@ -29,16 +38,24 @@ public class PlayerAttackInput : MonoBehaviour
             isSwiping = true;
             swipeStart = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             CreateSwipeTrail(swipeStart);
-
-            // Tap damage (click without moving)
-            ApplyTapDamage(swipeStart);
         }
         else if (Input.GetMouseButtonUp(0))
         {
             if (isSwiping)
             {
                 Vector2 swipeEnd = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-                ApplySwipeDamage(swipeStart, swipeEnd);
+                float swipeDistance = Vector2.Distance(swipeEnd, swipeStart);
+
+                if (swipeDistance < swipeThreshold)
+                {
+                    ApplyTapDamage(swipeStart);
+                    ShowTapHitmarker(swipeStart);
+                }
+                else
+                {
+                    ApplySwipeDamage(swipeStart, swipeEnd);
+                }
+
                 Destroy(currentTrail, swipeTrailLifetime);
                 isSwiping = false;
             }
@@ -63,8 +80,6 @@ public class PlayerAttackInput : MonoBehaviour
                 isSwiping = true;
                 swipeStart = touchPos;
                 CreateSwipeTrail(swipeStart);
-
-                ApplyTapDamage(swipeStart);
             }
             else if (touch.phase == TouchPhase.Moved && isSwiping)
             {
@@ -72,7 +87,18 @@ public class PlayerAttackInput : MonoBehaviour
             }
             else if ((touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled) && isSwiping)
             {
-                ApplySwipeDamage(swipeStart, touchPos);
+                float swipeDistance = Vector2.Distance(touchPos, swipeStart);
+
+                if (swipeDistance < swipeThreshold)
+                {
+                    ApplyTapDamage(swipeStart);
+                    ShowTapHitmarker(swipeStart);
+                }
+                else
+                {
+                    ApplySwipeDamage(swipeStart, touchPos);
+                }
+
                 Destroy(currentTrail, swipeTrailLifetime);
                 isSwiping = false;
             }
@@ -82,20 +108,28 @@ public class PlayerAttackInput : MonoBehaviour
 
     private void CreateSwipeTrail(Vector2 startPos)
     {
-        if (swipeTrailPrefab != null)
-        {
-            currentTrail = Instantiate(swipeTrailPrefab, startPos, Quaternion.identity);
-        }
+        lastSpawnPos = startPos;
+        timeSinceLastSpawn = 0f;
     }
 
     private void UpdateSwipeTrail(Vector2 currentPos)
     {
-        if (currentTrail != null)
+        timeSinceLastSpawn += Time.deltaTime;
+
+        if (timeSinceLastSpawn >= spawnInterval)
         {
-            currentTrail.transform.position = currentPos;
-            Vector2 dir = currentPos - swipeStart;
-            if (dir.sqrMagnitude > 0.001f)
-                currentTrail.transform.right = dir.normalized;
+            Vector2 dir = currentPos - lastSpawnPos;
+            if (dir.sqrMagnitude > 0.0001f)
+            {
+                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                Quaternion rot = Quaternion.Euler(0f, 0f, angle);
+
+                GameObject seg = Instantiate(swipeTrailPrefab, lastSpawnPos, rot);
+                Destroy(seg, swipeTrailLifetime);
+
+                lastSpawnPos = currentPos;
+                timeSinceLastSpawn = 0f;
+            }
         }
     }
 
@@ -121,11 +155,21 @@ public class PlayerAttackInput : MonoBehaviour
         }
     }
 
+    private void ShowTapHitmarker(Vector2 pos)
+    {
+        if (tapHitmarkerPrefab == null) return;
+
+        float randomZ = Random.Range(-50f, 50f);
+        Quaternion rot = Quaternion.Euler(0f, 0f, randomZ);
+
+        GameObject marker = Instantiate(tapHitmarkerPrefab, pos, rot);
+        Destroy(marker, tapHitmarkerLifetime);
+    }
+
     private void DealDamage(EnemyBase enemy)
     {
         float damage = GameManager.Instance.playerProgress.baseDamage;
 
-        // Strength Elixir check
         if (ItemEffectManager.Instance != null && ItemEffectManager.Instance.IsEffectActive("Item_Elixir"))
             damage *= 1f + (ItemEffectManager.Instance.GetEffectAmount("Item_Elixir") / 100f);
 

@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Manages horizontal scrolling of level backgrounds with parallax layers.
-// Handles pausing/resuming during boss fights or menus.
+/// <summary>
+/// Manages horizontal scrolling of background layers with parallax speed differences.
+/// Properly tiles panels edge-to-edge, loops seamlessly, and fills the screen on start.
+/// </summary>
 public class ScrollManager : MonoBehaviour
 {
     public static ScrollManager Instance;
@@ -17,7 +19,6 @@ public class ScrollManager : MonoBehaviour
     }
 
     [Header("Scrolling Layers")]
-    [Tooltip("Each layer group represents a depth that scrolls at a different speed for parralax.")]
     public List<ScrollLayer> layers = new List<ScrollLayer>();
 
     [Header("Scroll Settings")]
@@ -40,69 +41,112 @@ public class ScrollManager : MonoBehaviour
 
     private void Start()
     {
-        // Calculate world-space screen width based on main camera
         float cameraHeight = 2f * Camera.main.orthographicSize;
         screenWidth = cameraHeight * Camera.main.aspect;
+
+        AlignAllLayersAtStart();
     }
 
     private void Update()
     {
-        if (!isScrolling) return;
-
-        ScrollAllLayers();
+        if (isScrolling)
+            ScrollAllLayers();
     }
 
-    // Scrolls all active parallax layers horizontally and loops them when they exit the screen.
+    /// <summary>
+    /// Scrolls all panels and repositions those that exit the screen to the far right.
+    /// </summary>
     private void ScrollAllLayers()
     {
         foreach (var layer in layers)
         {
+            if (layer.panels == null || layer.panels.Count == 0)
+                continue;
+
             float layerSpeed = baseScrollSpeed * layer.scrollSpeed / (layer.layerDepth + 1f);
 
-            for (int i = 0; i < layer.panels.Count; i++)
+            foreach (var panel in layer.panels)
             {
-                Transform panel = layer.panels[i];
                 panel.Translate(Vector3.left * layerSpeed * Time.deltaTime);
+            }
 
-                // If the panel exits fully to the left, move it to the far right
-                if (panel.position.x < -screenWidth)
+            // Handle looping
+            foreach (var panel in layer.panels)
+            {
+                float panelWidth = GetPanelWidth(panel);
+                float leftEdge = panel.position.x - (panelWidth / 2f);
+
+                // When panel exits fully left, reposition it to rightmost panel
+                if (leftEdge < -screenWidth / 2f - panelWidth)
                 {
-                    float rightmostX = GetRightmostPanelX(layer.panels);
-                    Vector3 newPos = new Vector3(rightmostX + screenWidth, panel.position.y, panel.position.z);
-                    panel.position = newPos;
+                    float rightmostX = GetRightmostPanelRightEdge(layer.panels);
+                    panel.position = new Vector3(rightmostX + (panelWidth / 2f), panel.position.y, panel.position.z);
                 }
             }
         }
     }
 
-    // Finds the rightmost panel in the list for looping calculations.
-    private float GetRightmostPanelX(List<Transform> panels)
+    /// <summary>
+    /// Calculates world-space width of a panel based on its SpriteRenderer.
+    /// </summary>
+    private float GetPanelWidth(Transform panel)
     {
-        float maxX = float.MinValue;
+        SpriteRenderer sr = panel.GetComponent<SpriteRenderer>();
+        if (sr != null)
+            return sr.bounds.size.x;
+        return screenWidth;
+    }
+
+    /// <summary>
+    /// Returns the world-space rightmost edge among all panels.
+    /// </summary>
+    private float GetRightmostPanelRightEdge(List<Transform> panels)
+    {
+        float maxRightEdge = float.MinValue;
         foreach (var p in panels)
         {
-            if (p.position.x > maxX)
-                maxX = p.position.x;
+            if (p == null) continue;
+            float width = GetPanelWidth(p);
+            float rightEdge = p.position.x + (width / 2f);
+            if (rightEdge > maxRightEdge)
+                maxRightEdge = rightEdge;
         }
-        return maxX;
+        return maxRightEdge;
     }
 
-    // Stops scrolling, typically during boss fights or pause menus.
-    public void StopScrolling()
+    /// <summary>
+    /// Positions panels so they fill the screen from left to right, edge to edge.
+    /// </summary>
+    public void AlignAllLayersAtStart()
     {
-        isScrolling = false;
+        if (Camera.main == null) return;
+
+        float cameraCenterX = Camera.main.transform.position.x;
+        float cameraLeftEdge = cameraCenterX - (screenWidth / 2f);
+
+        foreach (var layer in layers)
+        {
+            if (layer.panels == null || layer.panels.Count == 0)
+                continue;
+
+            float nextX = cameraLeftEdge;
+            for (int i = 0; i < layer.panels.Count; i++)
+            {
+                Transform panel = layer.panels[i];
+                float panelWidth = GetPanelWidth(panel);
+
+                // Center panel on its intended position
+                float centerX = nextX + (panelWidth / 2f);
+                panel.position = new Vector3(centerX, panel.position.y, panel.position.z);
+
+                // Move next panel directly after this one
+                nextX += panelWidth;
+            }
+        }
     }
 
-    // Resumes scrolling after pause or boss fight.
-    public void ResumeScrolling()
-    {
-        isScrolling = true;
-    }
-
-    /// Dynamically sets scroll speed (for slowing or speeding up).
-    public void SetScrollSpeed(float newSpeed)
-    {
-        baseScrollSpeed = newSpeed;
-    }
+    public void StopScrolling() => isScrolling = false;
+    public void ResumeScrolling() => isScrolling = true;
+    public void SetScrollSpeed(float newSpeed) => baseScrollSpeed = newSpeed;
 }
 
