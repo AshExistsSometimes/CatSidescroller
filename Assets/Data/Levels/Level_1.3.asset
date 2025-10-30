@@ -37,7 +37,20 @@ MonoBehaviour:
   - enemyData: {fileID: 11400000, guid: eae2a5a34214b4e4c9412ef4f7bf206c, type: 2}
     delayBeforeSpawn: 1
     enemyHeight: 0
+  - enemyData: {fileID: 11400000, guid: c85a7f6c22ce0734aa0ec43ee1bba346, type: 2}
+    delayBeforeSpawn: 1
+    enemyHeight: 0.613
+  - enemyData: {fileID: 11400000, guid: c85a7f6c22ce0734aa0ec43ee1bba346, type: 2}
+    delayBeforeSpawn: 0
+    enemyHeight: 0.422
+  - enemyData: {fileID: 11400000, guid: eae2a5a34214b4e4c9412ef4f7bf206c, type: 2}
+    delayBeforeSpawn: 0.5
+    enemyHeight: 0
+  - enemyData: {fileID: 11400000, guid: ae0e4b31974c2d24f8bfa77de2fb063a, type: 2}
+    delayBeforeSpawn: 0.5
+    enemyHeight: 0
+  - enemyData: {fileID: 11400000, guid: ae0e4b31974c2d24f8bfa77de2fb063a, type: 2}
+    delayBeforeSpawn: 3
+    enemyHeight: 0
   hasBoss: 0
   bossEnemyData: {fileID: 0}
-  additionalLayers: []
-  overrideLayers: []

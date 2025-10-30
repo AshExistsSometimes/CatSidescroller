@@ -270,6 +270,9 @@ MonoBehaviour:
   damage: 1
   speed: 0.5
   enemyType: 0
+  OriginalColour: {r: 1, g: 1, b: 1, a: 1}
+  DamageColour: {r: 1, g: 0, b: 0, a: 1}
+  sr: {fileID: 8942289725660136392}
   knockbackForce: 5
   knockbackUpward: 2
   isKnockedBack: 0
@@ -315,7 +318,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0

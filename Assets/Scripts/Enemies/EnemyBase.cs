@@ -15,12 +15,14 @@ public class EnemyBase : MonoBehaviour
     public float damage = 1f;
     public float speed = 1f;
     public EnemyType enemyType;
+    public Color OriginalColour = Color.white;
+    public Color DamageColour = Color.red;
 
     protected EnemyData sourceData;
 
     // Cached components
     protected Rigidbody2D rb;
-    protected SpriteRenderer sr;
+    public SpriteRenderer sr;
 
     // Hit feedback
     private Color originalColor;
@@ -28,7 +30,6 @@ public class EnemyBase : MonoBehaviour
     protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        sr = GetComponent<SpriteRenderer>();
         originalColor = sr.color;
     }
 
@@ -68,9 +69,10 @@ public class EnemyBase : MonoBehaviour
     /// Coroutine that briefly flashes the sprite red to indicate damage.
     protected IEnumerator FlashRed()
     {
-        sr.color = Color.red;
+        Debug.Log("FLASH RED");
+        sr.color = DamageColour;
         yield return new WaitForSeconds(0.1f);
-        sr.color = originalColor;
+        sr.color = OriginalColour;
     }
     protected virtual void Die()
     {

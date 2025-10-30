@@ -86,16 +86,14 @@ public class LevelManager : MonoBehaviour
             // If this spawn is a boss, stop scrolling immediately
             if (spawnInfo.enemyData != null && spawnInfo.enemyData.type == EnemyType.Boss)
             {
-                if (ScrollManager.Instance != null)
-                    ScrollManager.Instance.StopScrolling();
-                bossActive = true;
+                StartCoroutine(StopWhenBoss());
             }
         }
 
         // Wait until all active enemies have been removed
         yield return new WaitUntil(() => activeEnemies.Count == 0);
 
-        // Resume scrolling if boss was active (visual transition)
+        // Resume scrolling if boss was active
         if (bossActive && ScrollManager.Instance != null)
             ScrollManager.Instance.ResumeScrolling();
 
@@ -107,6 +105,14 @@ public class LevelManager : MonoBehaviour
         // Notify GameManager that the level completed
         if (GameManager.Instance != null)
             GameManager.Instance.OnLevelCompleted();
+    }
+
+    public IEnumerator StopWhenBoss()
+    {
+        if (ScrollManager.Instance != null)
+            yield return new WaitForSeconds(2f);
+            ScrollManager.Instance.StopScrolling();
+        bossActive = true;
     }
 
     public void GoToHub()
